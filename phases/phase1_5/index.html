@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability Simulation - Materiality Topics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .header .subtitle {
+            color: #1e3c72;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .intro-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .intro-section h2 {
+            color: #1e3c72;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .intro-section p {
+            color: #555;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .esg-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .esg-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .esg-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .esg-section.environmental {
+            border-top: 5px solid #28a745;
+        }
+
+        .esg-section.social {
+            border-top: 5px solid #007bff;
+        }
+
+        .esg-section.governance {
+            border-top: 5px solid #6f42c1;
+        }
+
+        .esg-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .esg-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+
+        .environmental .esg-icon {
+            color: #28a745;
+        }
+
+        .social .esg-icon {
+            color: #007bff;
+        }
+
+        .governance .esg-icon {
+            color: #6f42c1;
+        }
+
+        .esg-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .esg-subtitle {
+            font-size: 1em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .topics-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .topics-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #555;
+            font-size: 0.95em;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .topics-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #1e3c72;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .topics-list li:last-child {
+            border-bottom: none;
+        }
+
+        .topics-list li.highlight {
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 10px 0 10px 20px;
+            margin: 2px 0;
+            font-weight: 600;
+        }
+
+        .topics-list li.highlight:before {
+            content: "✅";
+            font-size: 1em;
+        }
+
+        .stats-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .continue-btn {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3);
+        }
+
+        .note-box {
+            background: #e3f2fd;
+            border: 1px solid #1976d2;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .note-box h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .note-box p {
+            color: #1565c0;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .esg-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 Sustainability Simulation</h1>
+            <p>Phase 1.5: Understanding Materiality Topics</p>
+            <div class="subtitle">ESG Framework Overview</div>
+        </div>
+
+        <div class="intro-section">
+            <h2>🎯 What Are Materiality Topics?</h2>
+            <p>Materiality topics are ESG (Environmental, Social, Governance) issues that significantly impact your business operations, stakeholder relationships, and long-term value creation. Understanding these topics is crucial for making informed sustainability decisions.</p>
+            <p>In the next phase, your strategic choices will directly influence your company's performance across these materiality areas, affecting your ESG scores, operational costs, and ultimately your market valuation.</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">18</div>
+                    <div class="stat-label">Environmental Topics</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Social Topics</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Governance Topics</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">36</div>
+                    <div class="stat-label">Total Topics</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="esg-container">
+            <!-- Environmental Section -->
+            <div class="esg-section environmental">
+                <div class="esg-header">
+                    <div class="esg-icon">🌱</div>
+                    <div>
+                        <div class="esg-title">Environmental (E)</div>
+                        <div class="esg-subtitle">18 Key Topics</div>
+                    </div>
+                </div>
+                <ul class="topics-list">
+                    <li>Climate change adaptation</li>
+                    <li>Climate change mitigation</li>
+                    <li>Energy</li>
+                    <li>Water and marine resources</li>
+                    <li>Pollution of air</li>
+                    <li>Pollution of water</li>
+                    <li>Pollution of soil</li>
+                    <li>Pollution of living organisms and food resources</li>
+                    <li>Substances of concern</li>
+                    <li>Substances of very high concern</li>
+                    <li>Microplastics</li>
+                    <li>Direct impact drivers of biodiversity loss</li>
+                    <li>Impacts on the state of species</li>
+                    <li>Impacts on the extent and condition of ecosystems</li>
+                    <li>Impacts and dependencies on ecosystem services</li>
+                    <li>Resources inflows, including resource use</li>
+                    <li>Resource outflows related to products and services</li>
+                    <li>Waste</li>
+                </ul>
+            </div>
+
+            <!-- Social Section -->
+            <div class="esg-section social">
+                <div class="esg-header">
+                    <div class="esg-icon">👥</div>
+                    <div>
+                        <div class="esg-title">Social (S)</div>
+                        <div class="esg-subtitle">10 Key Topics</div>
+                    </div>
+                </div>
+                <ul class="topics-list">
+                    <li>Working conditions</li>
+                    <li>Equal treatment and opportunities for all</li>
+                    <li>Other work-related rights</li>
+                    <li>Communities' economic, social, and cultural rights</li>
+                    <li>Communities' civil and political rights</li>
+                    <li>Rights of indigenous communities</li>
+                    <li>Information-related impacts for consumers and/or end-users</li>
+                    <li>Personal safety of consumers and/or end-users</li>
+                    <li>Social inclusion of consumers and/or end-users</li>
+                    <li class="highlight">Employee and community training initiatives</li>
+                </ul>
+            </div>
+
+            <!-- Governance Section -->
+            <div class="esg-section governance">
+                <div class="esg-header">
+                    <div class="esg-icon">⚖️</div>
+                    <div>
+                        <div class="esg-title">Governance (G)</div>
+                        <div class="esg-subtitle">8 Key Topics</div>
+                    </div>
+                </div>
+                <ul class="topics-list">
+                    <li>Corporate culture</li>
+                    <li>Protection of whistle-blowers</li>
+                    <li>Animal welfare</li>
+                    <li>Political engagement and lobbying activities</li>
+                    <li>Management of relationships with suppliers including payment practices</li>
+                    <li>Corruption and bribery</li>
+                    <li class="highlight">Board independence</li>
+                    <li class="highlight">Board training and capacity building</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <h3>💡 Key Insight</h3>
+            <p>In Phase 2, your strategic decisions will impact multiple materiality topics simultaneously. For example, investing in renewable energy affects climate change mitigation, energy costs, and potentially working conditions. Consider the interconnected nature of these topics when making decisions.</p>
+        </div>
+
+        <button class="continue-btn" onclick="proceedToPhase2()">
+            Continue to Phase 2: Strategic Decisions →
+        </button>
+    </div>
+
+    <script>
+        function proceedToPhase2() {
+            // Store materiality topics awareness
+            const materialityData = {
+                environmentalTopics: 18,
+                socialTopics: 10,
+                governanceTopics: 8,
+                totalTopics: 36,
+                timestamp: new Date().toISOString(),
+                phase: 'materiality_review_complete'
+            };
+
+            console.log('Materiality Topics Reviewed:', materialityData);
+            
+            // Animation effect
+            document.querySelector('.continue-btn').style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                document.querySelector('.continue-btn').style.transform = 'scale(1)';
+                alert('Materiality topics reviewed! Moving to Phase 2: Strategic Decision Making...');
+                // Here you would transition to Phase 2
+            }, 150);
+        }
+
+        // Add subtle animations on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.esg-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>

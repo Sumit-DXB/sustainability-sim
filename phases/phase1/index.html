@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability Simulation - Phase 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            color: #1e3c72;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+
+        .display-value {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .financial-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .esg-scores {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .esg-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .esg-score {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .emissions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .emission-card {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #ffeaa7;
+        }
+
+        .share-price-display {
+            background: linear-gradient(45deg, #00b894, #00a085);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .share-price-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .location-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .continue-btn {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(30, 60, 114, 0.3);
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 Sustainability Simulation</h1>
+            <p>Phase 1: Company Baseline Overview</p>
+        </div>
+
+        <div class="form-container">
+            <form id="phase1Form">
+                <!-- Company Profile Section -->
+                <div class="section">
+                    <h2 class="section-title">🏢 Company Profile</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="companyName">Company Name</label>
+                            <input type="text" id="companyName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Product/Service</label>
+                            <div class="display-value">Product A</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Current Market Share</label>
+                            <div class="display-value">10.0%</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Annual Revenue</label>
+                            <div class="display-value">$1,000.0 million</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Product Pricing Strategy</label>
+                            <div class="display-value">Competitive Pricing</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Breakdown Section -->
+                <div class="section">
+                    <h2 class="section-title">💰 Current Financial Position</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Raw Materials Cost</label>
+                            <div class="display-value">$300.0 million</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Manufacturing Cost</label>
+                            <div class="display-value">$200.0 million</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Logistics Cost</label>
+                            <div class="display-value">$80.0 million</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Direct Labor Cost</label>
+                            <div class="display-value">$150.0 million</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Management & Admin</label>
+                            <div class="display-value">$100.0 million</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Debt Service</label>
+                            <div class="display-value">$50.0 million</div>
+                        </div>
+                    </div>
+                    
+                    <div class="financial-summary">
+                        <h3>Financial Summary</h3>
+                        <div class="metric-card">
+                            <strong>Total COGS: $<span id="totalCOGS">580.0</span> million</strong>
+                        </div>
+                        <div class="metric-card">
+                            <strong>Total Manpower: $<span id="totalManpower">250.0</span> million</strong>
+                        </div>
+                        <div class="metric-card">
+                            <strong>Net Profit: $<span id="netProfit">120.0</span> million</strong>
+                        </div>
+                        <div class="metric-card">
+                            <strong>Profit Margin: <span id="profitMargin">12.0</span>%</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asset Portfolio Section -->
+                <div class="section">
+                    <h2 class="section-title">🏭 Asset Portfolio</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Manufacturing Facilities Value</label>
+                            <div class="display-value">$400.0 million</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Real Estate Holdings</label>
+                            <div class="display-value">$200.0 million</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Equipment & Machinery</label>
+                            <div class="display-value">$300.0 million</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Current Inventory Value</label>
+                            <div class="display-value">$100.0 million</div>
+                        </div>
+                    </div>
+                    <div class="financial-summary">
+                        <div class="metric-card">
+                            <strong>Total Assets: $<span id="totalAssets">1,000.0</span> million</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ESG Status Section -->
+                <div class="section">
+                    <h2 class="section-title">📊 Current ESG Status</h2>
+                    <div class="esg-scores">
+                        <div class="esg-card">
+                            <div class="esg-score">40</div>
+                            <div>Environmental</div>
+                            <small>Energy, Waste, Emissions</small>
+                        </div>
+                        <div class="esg-card">
+                            <div class="esg-score">40</div>
+                            <div>Social</div>
+                            <small>Labor, Community, Safety</small>
+                        </div>
+                        <div class="esg-card">
+                            <div class="esg-score">40</div>
+                            <div>Governance</div>
+                            <small>Ethics, Transparency</small>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 30px; margin-bottom: 15px;">Current Emissions Profile</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="tooltip" data-tooltip="Direct emissions from owned sources">Scope 1 Emissions</label>
+                            <div class="display-value">25,000 tons CO2/year</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="tooltip" data-tooltip="Indirect emissions from purchased energy">Scope 2 Emissions</label>
+                            <div class="display-value">35,000 tons CO2/year</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="tooltip" data-tooltip="Indirect emissions from value chain">Scope 3 Emissions</label>
+                            <div class="display-value">90,000 tons CO2/year</div>
+                        </div>
+                    </div>
+                    <div class="financial-summary">
+                        <div class="metric-card">
+                            <strong>Total Carbon Footprint: <span id="totalEmissions">150,000</span> tons CO2/year</strong>
+                        </div>
+                        <div class="metric-card">
+                            <strong>Carbon Intensity: <span id="carbonIntensity">150.0</span> tons CO2/$ million revenue</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share Price Section -->
+                <div class="section">
+                    <h2 class="section-title">📈 Current Market Valuation</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Current P/E Ratio</label>
+                            <div class="display-value">18.0</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="growthRate">Expected Growth Rate (%)</label>
+                            <input type="number" id="growthRate" min="-10" max="50" step="0.1" value="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ESG Weight in Valuation</label>
+                            <div class="display-value">2% (Minimal investor focus... for now)</div>
+                        </div>
+                    </div>
+                    <div class="share-price-display">
+                        <div class="share-price-value">$<span id="sharePrice">227.28</span></div>
+                        <div>Current Share Price</div>
+                        <small>Based on earnings, P/E ratio, growth rate, and ESG premium</small>
+                    </div>
+                </div>
+
+                <!-- Location Context Section -->
+                <div class="section">
+                    <h2 class="section-title">🌍 Location Context</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="country">Country/Region</label>
+                            <input type="text" id="country" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="netZeroTarget">National Net Zero Target Year</label>
+                            <input type="number" id="netZeroTarget" min="2025" max="2070" value="2050" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="currentTemp">Current Max Temperature (°C)</label>
+                            <input type="number" id="currentTemp" min="10" max="70" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tempRise">Temperature Rise Last Year (°C)</label>
+                            <input type="number" id="tempRise" min="0" max="5" step="0.1" value="0.2" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sector">Industry Sector</label>
+                            <select id="sector" required>
+                                <option value="">Select Sector</option>
+                                <option value="manufacturing">Manufacturing</option>
+                                <option value="technology">Technology</option>
+                                <option value="energy">Energy</option>
+                                <option value="automotive">Automotive</option>
+                                <option value="retail">Retail</option>
+                                <option value="food">Food & Beverage</option>
+                                <option value="finance">Financial Services</option>
+                                <option value="healthcare">Healthcare</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sectorTarget">Sector Net Zero Target Year</label>
+                            <input type="number" id="sectorTarget" min="2025" max="2060" value="2045" required>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 20px; margin-bottom: 15px;">Location Characteristics</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="nearCoast"> Near Coast (Sea level rise risk)
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="nearForest"> Near Forest (Wildfire risk)
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="industrialHub"> Industrial Hub (Harder to transition)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="location-tags" id="locationTags"></div>
+                </div>
+
+                <button type="submit" class="continue-btn">Continue to Phase 1.5 : Materiality Decisions →</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Store company baseline data
+        const companyBaseline = {
+            // Fixed company profile
+            productService: "Product A",
+            marketShare: 10.0,
+            annualRevenue: 1000.0,
+            pricingStrategy: "competitive",
+            
+            // Fixed financial breakdown
+            rawMaterials: 300.0,
+            manufacturing: 200.0,
+            logistics: 80.0,
+            directLabor: 150.0,
+            management: 100.0,
+            debtService: 50.0,
+            
+            // Calculated financials
+            totalCOGS: 580.0,
+            totalManpower: 250.0,
+            netProfit: 120.0,
+            profitMargin: 12.0,
+            
+            // Fixed assets
+            facilities: 400.0,
+            realEstate: 200.0,
+            equipment: 300.0,
+            inventory: 100.0,
+            totalAssets: 1000.0,
+            
+            // Fixed emissions
+            scope1: 25000,
+            scope2: 35000,
+            scope3: 90000,
+            totalEmissions: 150000,
+            carbonIntensity: 150.0,
+            
+            // Fixed market data
+            peRatio: 18.0,
+            esgWeight: 2.0,
+            
+            // ESG scores
+            environmentalScore: 40,
+            socialScore: 40,
+            governanceScore: 40
+        };
+
+        let companyData = { ...companyBaseline };
+
+        // Real-time share price calculation
+        function updateSharePrice() {
+            const growthRate = parseFloat(document.getElementById('growthRate').value) || 5;
+            
+            // Share price calculation
+            const earningsPerShare = companyBaseline.netProfit / 10; // Simplified assumption (10M shares)
+            const basePrice = earningsPerShare * companyBaseline.peRatio;
+            const growthMultiplier = 1 + (growthRate / 100);
+            const esgMultiplier = 1 + (companyBaseline.esgWeight / 100) * (companyBaseline.environmentalScore / 100);
+            const sharePrice = basePrice * growthMultiplier * esgMultiplier;
+            
+            document.getElementById('sharePrice').textContent = Math.max(sharePrice, 0).toFixed(2);
+            companyData.growthRate = growthRate;
+            companyData.sharePrice = sharePrice;
+        }
+
+        // Update location tags
+        function updateLocationTags() {
+            const tags = [];
+            if (document.getElementById('nearCoast').checked) tags.push('Coastal Risk');
+            if (document.getElementById('nearForest').checked) tags.push('Wildfire Risk');
+            if (document.getElementById('industrialHub').checked) tags.push('Industrial Hub');
+            
+            const tagsContainer = document.getElementById('locationTags');
+            tagsContainer.innerHTML = tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+        }
+
+        // Add event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listener for growth rate
+            document.getElementById('growthRate').addEventListener('input', updateSharePrice);
+
+            // Add event listeners to checkboxes
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateLocationTags);
+            });
+
+            // Form submission
+            document.getElementById('phase1Form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Collect form data (only the user inputs)
+                const formData = new FormData(this);
+                const userInputs = Object.fromEntries(formData.entries());
+                
+                // Combine baseline data with user inputs
+                companyData = { ...companyBaseline, ...userInputs };
+                companyData.timestamp = new Date().toISOString();
+
+                console.log('Phase 1 Company Data:', companyData);
+                
+                alert('Phase 1 Complete! Company baseline established. Ready for Phase 1.5...');
+                // Here you would transition to Phase 1.5 or send data to storage
+            });
+
+            // Initialize calculations
+            updateSharePrice();
+            updateLocationTags();
+        });
+    </script>
+</body>
+</html>
+
